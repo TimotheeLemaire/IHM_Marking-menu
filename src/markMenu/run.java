@@ -13,7 +13,7 @@ public class run {
 		// TODO Auto-generated method stub
 		JFrame frame = new JFrame ();
 		
-		JPanel panel = new JPanel();
+		MarkMenuPanel panel = new MarkMenuPanel();
 		frame.setTitle("marking menu");
 		
 		frame.add(panel);
