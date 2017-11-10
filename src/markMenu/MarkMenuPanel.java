@@ -41,7 +41,7 @@ public class MarkMenuPanel extends JPanel {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				repaint();
+				erase();
 				paintModel();
 				checkpointsPos = new LinkedList<Point>();
 				modelPoints = new LinkedList<Point>();
@@ -91,46 +91,57 @@ public class MarkMenuPanel extends JPanel {
 				// TODO Auto-generated method stub
 				prevPos = currentPos;
 				currentPos = getCurrentPosition(e);
-				drawNewSegment(prevPos, currentPos);
+				drawSegment(prevPos, currentPos);
 
+				//System.out.println(currentPos.toString());
 				System.out.println(Math.hypot(currentPos.x - prevPos.x, currentPos.y - prevPos.y));
 
-				if (Math.hypot(currentPos.x - prevPos.x, currentPos.y - prevPos.y) <= 1) {
+				if (Math.hypot(currentPos.x - prevPos.x, currentPos.y - prevPos.y) <= 1 && 
+						Math.hypot(currentPos.x - checkpointsPos.getLast().x, currentPos.y - checkpointsPos.getLast().y) > 100) {
 					
-					Point newCheckPoint;
-					if ((currentPos.x - checkpointsPos.getLast().x) > (currentPos.y - checkpointsPos.getLast().y)) {
+					int dist_model = (int) Math.hypot(currentPos.x - checkpointsPos.getLast().x, currentPos.y - checkpointsPos.getLast().y);
+					
+					Point lastCheckPoint = checkpointsPos.getLast();
+					Point lastModelPoint = modelPoints.getLast();
+					Point newModelPoint;
+					if (Math.abs(currentPos.x - lastCheckPoint.x) > Math.abs(currentPos.y - lastCheckPoint.y)) {
 						// EAST or WEST
-						if ((currentPos.x - checkpointsPos.getLast().x) > 0) {
+						if ((currentPos.x - lastCheckPoint.x) > 0) {
 							// EAST
-							newCheckPoint = new Point(checkpointsPos.getLast().x + DIST_MODEL,
-									checkpointsPos.getLast().y);
+							System.out.println("east");
+							newModelPoint = new Point(lastModelPoint.x + dist_model,
+									lastCheckPoint.y);
 
 						} else {
 							// WEST
-							newCheckPoint = new Point(checkpointsPos.getLast().x - DIST_MODEL,
-									checkpointsPos.getLast().y);
+							System.out.println("west");
+							newModelPoint = new Point(lastModelPoint.x - dist_model,
+									lastCheckPoint.y);
 
 						}
 
 					} else {
 						// NORTH or SOUTH
-						if ((currentPos.x - checkpointsPos.getLast().x) > 0) {
-							// EAST
-							newCheckPoint = new Point(checkpointsPos.getLast().x,
-									checkpointsPos.getLast().y + DIST_MODEL);
+						if ((currentPos.y - lastCheckPoint.y) > 0) {
+							// SOUTH
+							System.out.println("south");
+							newModelPoint = new Point(lastModelPoint.x,
+									lastCheckPoint.y + dist_model);
 
 						} else {
-							// WEST
-							newCheckPoint = new Point(checkpointsPos.getLast().x,
-									checkpointsPos.getLast().y - DIST_MODEL);
+							// NORTH
+							System.out.println("north");
+							newModelPoint = new Point(lastModelPoint.x,
+									lastCheckPoint.y - dist_model);
 
 						}
 
 					}
-					modelPoints.add(newCheckPoint);
+					modelPoints.add(newModelPoint);
 					checkpointsPos.add(currentPos);
-					repaint();
+					erase();
 					paintCheckPoints();
+					//paintModel();
 				}
 			}
 		});
@@ -140,8 +151,8 @@ public class MarkMenuPanel extends JPanel {
 		return new Point(e.getX(), e.getY());
 	}
 
-	protected void drawNewSegment(Point p1, Point p2) {
-		getGraphics().drawLine(prevPos.x, prevPos.y, currentPos.x, currentPos.y);
+	protected void drawSegment(Point p1, Point p2) {
+		this.getGraphics().drawLine(p1.x, p1.y, p2.x, p2.y);
 	}
 
 	protected void paintCheckPoints() {
@@ -151,7 +162,7 @@ public class MarkMenuPanel extends JPanel {
 			p1 = iter.next();
 			while (iter.hasNext()) {
 				p2 = iter.next();
-				drawNewSegment(p1, p2);
+				drawSegment(p1, p2);
 				System.out.println("drawing");
 				System.out.println(p1.toString());
 				System.out.println(p2.toString());
@@ -167,10 +178,15 @@ public class MarkMenuPanel extends JPanel {
 			p1 = iter.next();
 			while (iter.hasNext()) {
 				p2 = iter.next();
-				drawNewSegment(p1, p2);
+				drawSegment(p1, p2);
 				p1 = p2;
 			}
 		}
+	}
+	
+	protected void erase() {
+
+		getGraphics().clearRect(0, 0, this.getWidth(), this.getHeight());
 	}
 
 }
