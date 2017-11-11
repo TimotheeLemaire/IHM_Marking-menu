@@ -1,9 +1,12 @@
 package markMenu;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -32,7 +35,11 @@ public class MarkMenuPanel extends JPanel {
 	protected LinkedList<Point> modelPoints = new LinkedList<Point>();
 	protected Point prevPos;
 	protected Point currentPos;
+	
+	protected Directions currentDir;
 
+	protected TimerTask menuTask;
+	
 	public MarkMenuPanel() {
 		super();
 
@@ -55,7 +62,7 @@ public class MarkMenuPanel extends JPanel {
 				checkpointsPos.add(startPos);
 				modelPoints.add(startPos);
 				currentPos = getCurrentPosition(e);
-
+				displayMenu();
 			}
 
 			@Override
@@ -185,8 +192,37 @@ public class MarkMenuPanel extends JPanel {
 	}
 	
 	protected void erase() {
-
 		getGraphics().clearRect(0, 0, this.getWidth(), this.getHeight());
+	}
+
+	
+	protected void displayMenu() {
+		
+		this.setLayout(null);
+		int distance = 100;
+		
+		
+		JLabel northLabel = new JLabel("Boulitre");
+		JLabel eastLabel = new JLabel("Boulitre");
+		JLabel southLabel = new JLabel("Boulitre");
+		JLabel westLabel = new JLabel("Boulitre");
+		this.add(northLabel);
+		this.add(westLabel);
+		this.add(southLabel);
+		this.add(eastLabel);
+		
+        northLabel.setSize(northLabel.getPreferredSize());
+        eastLabel.setSize(eastLabel.getPreferredSize());
+        southLabel.setSize(southLabel.getPreferredSize());
+        westLabel.setSize(westLabel.getPreferredSize());
+
+		northLabel.setBounds(new Rectangle(startPos.x-northLabel.getWidth()/2         ,startPos.y-northLabel.getHeight()/2-distance,northLabel.getWidth(),northLabel.getHeight()));
+		eastLabel.setBounds(new Rectangle( startPos.x- eastLabel.getWidth()/2+distance,startPos.y- eastLabel.getHeight()/2         , eastLabel.getWidth(), eastLabel.getHeight()));
+		southLabel.setBounds(new Rectangle(startPos.x-southLabel.getWidth()/2         ,startPos.y-southLabel.getHeight()/2+distance,southLabel.getWidth(),southLabel.getHeight()));
+		westLabel.setBounds(new Rectangle( startPos.x- westLabel.getWidth()/2-distance,startPos.y- westLabel.getHeight()/2         , westLabel.getWidth(), westLabel.getHeight()));
+
+		
+		repaint();
 	}
 
 }
