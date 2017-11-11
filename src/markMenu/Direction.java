@@ -1,6 +1,6 @@
 package markMenu;
 
-public enum Directions {
+public enum Direction {
 	north, west, south, east;
 
 }
