@@ -126,11 +126,11 @@ public class MarkMenuPanel extends JPanel {
 				// System.out.println(Math.hypot(currentPos.x - prevPos.x, currentPos.y -
 				// prevPos.y));
 
-				erase();
-				paintCheckPoints();
-				displayMenu(lastCheckPoint);
-
+				eraseSegment(lastCheckPoint, currentPos);
+				
 				detectCheckPoints(e);
+				
+				displayMenu(lastCheckPoint);
 
 				drawSegment(lastCheckPoint, currentPos);
 
@@ -200,6 +200,12 @@ public class MarkMenuPanel extends JPanel {
 
 	protected void drawSegment(Point p1, Point p2) {
 		this.getGraphics().drawLine(p1.x, p1.y, p2.x, p2.y);
+	}
+	
+	protected void eraseSegment(Point p1, Point p2) {
+		Graphics g = this.getGraphics();
+		g.setColor(getBackground());
+		g.drawLine(p1.x, p1.y, p2.x, p2.y);
 	}
 
 	protected void detectCheckPoints(MouseEvent e) {
