@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
 public class run {
 
 	public static JEditorPane log;
@@ -69,7 +67,7 @@ public class run {
 				try {
 					panel.setRayonMenu(Integer.parseInt(sizeField.getText()));
 				}
-				catch (ParseException ex) {
+				catch (NumberFormatException ex) {
 					System.out.println("parse error");
 				}
 			}
