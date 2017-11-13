@@ -2,9 +2,17 @@ package markMenu;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class run {
 
@@ -12,13 +20,61 @@ public class run {
 
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub		
 		
 		JFrame frame = new JFrame();
 		MenuTree tree = constructMenu();
 		MarkMenuPanel panel = new MarkMenuPanel(tree);
 		frame.setTitle("marking menu");
 				
+		JPanel size = new JPanel();
+		frame.add(size,BorderLayout.NORTH);
+		
+		size.add(new JLabel("taille du menu (rayon)"),BorderLayout.WEST);
+		JTextArea sizeField = new JTextArea();
+		sizeField.setPreferredSize(new Dimension(100, 14));
+		sizeField.setText(""+panel.getRayonMenu());
+		//sizeField.setEditable(true);
+		size.add(sizeField);
+		
+		JButton applySize = new JButton("Apply");
+		size.add(applySize,BorderLayout.EAST);
+		applySize.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					panel.setRayonMenu(Integer.parseInt(sizeField.getText()));
+				}
+				catch (ParseException ex) {
+					System.out.println("parse error");
+				}
+			}
+		});
+		
 		log = new JEditorPane();
 		log.setEditable(false);
 		
@@ -26,7 +82,7 @@ public class run {
 		
 		frame.add(panel);
 		
-		panel.setPreferredSize(new Dimension(750,750));
+		panel.setPreferredSize(new Dimension(650,650));
 		
 		frame.pack();
 		frame.setVisible(true);

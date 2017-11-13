@@ -19,7 +19,15 @@ public class MarkMenuPanel extends JPanel {
 	 * 
 	 */
 
-	static final int DIST_MODEL = 100;
+	private int rayonMenu = 100;
+
+	public int getRayonMenu() {
+		return rayonMenu;
+	}
+
+	public void setRayonMenu(int rayonMenu) {
+		this.rayonMenu = rayonMenu;
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -78,6 +86,8 @@ public class MarkMenuPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 
+				erase();
+				
 				currentEntry = menu;
 
 				startPos = getCurrentPosition(e);
@@ -114,25 +124,26 @@ public class MarkMenuPanel extends JPanel {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 				// System.out.println(currentPos.toString());
 				// System.out.println(Math.hypot(currentPos.x - prevPos.x, currentPos.y -
 				// prevPos.y));
 
-				eraseSegment(lastCheckPoint, currentPos);
-				
-				detectCheckPoints(e);
-				
-				displayMenu(lastCheckPoint);
-
-				drawSegment(lastCheckPoint, currentPos);
+				if(!currentEntry.isleaf()) {
+					
+					eraseSegment(lastCheckPoint, currentPos);
+					
+					detectCheckPoints(e);
+					
+					displayMenu(lastCheckPoint);
+	
+					drawSegment(lastCheckPoint, currentPos);
+				}
 
 			}
 		});
@@ -215,14 +226,14 @@ public class MarkMenuPanel extends JPanel {
 		oldDirection = newDirection;
 		newDirection = detectDirection(prevPos, currentPos);
 
-		if (Math.hypot(currentPos.x - checkpointsPos.getLast().x, currentPos.y - checkpointsPos.getLast().y) > 100
+		if (Math.hypot(currentPos.x - checkpointsPos.getLast().x, currentPos.y - checkpointsPos.getLast().y) > rayonMenu
 				&& ((oldDirection != newDirection)
 						|| (Math.hypot(currentPos.x - prevPos.x, currentPos.y - prevPos.y) <= 2)
 						|| Math.hypot(currentPos.x - checkpointsPos.getLast().x,
-								currentPos.y - checkpointsPos.getLast().y) > 300)) {
+								currentPos.y - checkpointsPos.getLast().y) > (3*rayonMenu))) {
 
-			int dist_model = DIST_MODEL;
-			// int dist_model = (int) Math.hypot(currentPos.x - checkpointsPos.getLast().x,
+			// int rayonMenu = rayonMenu;
+			// int rayonMenu = (int) Math.hypot(currentPos.x - checkpointsPos.getLast().x,
 			// currentPos.y - checkpointsPos.getLast().y);
 
 			Point newModelPoint;
@@ -232,7 +243,7 @@ public class MarkMenuPanel extends JPanel {
 
 				switch (newCheckpointDirection) {
 				case north:
-					newModelPoint = new Point(lastModelPoint.x, lastModelPoint.y - dist_model);
+					newModelPoint = new Point(lastModelPoint.x, lastModelPoint.y - rayonMenu);
 					if (lastCheckpointDirection == null)
 						currentEntry = currentEntry.getChild1();
 					else
@@ -251,7 +262,7 @@ public class MarkMenuPanel extends JPanel {
 						}
 					break;
 				case east:
-					newModelPoint = new Point(lastModelPoint.x + dist_model, lastModelPoint.y);
+					newModelPoint = new Point(lastModelPoint.x + rayonMenu, lastModelPoint.y);
 					if (lastCheckpointDirection == null)
 						currentEntry = currentEntry.getChild2();
 					else
@@ -271,7 +282,7 @@ public class MarkMenuPanel extends JPanel {
 					break;
 
 				case south:
-					newModelPoint = new Point(lastModelPoint.x, lastModelPoint.y + dist_model);
+					newModelPoint = new Point(lastModelPoint.x, lastModelPoint.y + rayonMenu);
 					if (lastCheckpointDirection == null)
 						currentEntry = currentEntry.getChild3();
 					else
@@ -290,7 +301,7 @@ public class MarkMenuPanel extends JPanel {
 						}
 					break;
 				case west:
-					newModelPoint = new Point(lastModelPoint.x - dist_model, lastModelPoint.y);
+					newModelPoint = new Point(lastModelPoint.x - rayonMenu, lastModelPoint.y);
 					if (lastCheckpointDirection == null)
 						currentEntry = ((MenuTree) currentEntry).getChild4();
 					else
@@ -317,9 +328,12 @@ public class MarkMenuPanel extends JPanel {
 				checkpointsPos.add(lastCheckPoint);
 				lastModelPoint = newModelPoint;
 				modelPoints.add(lastModelPoint);
-				erase();
+				if(!currentEntry.isleaf()) {
+					erase();
+					displayMenu(currentPos);
+				}
 				paintCheckPoints();
-				displayMenu(currentPos);
+
 			}
 		}
 	}
@@ -359,7 +373,7 @@ public class MarkMenuPanel extends JPanel {
 	protected void displayMenu(Point position) {
 
 		this.setLayout(null);
-		int distance = 100;
+		int distance = rayonMenu;
 
 		northOption = new Rectangle();
 		eastOption = new Rectangle();
@@ -436,7 +450,7 @@ public class MarkMenuPanel extends JPanel {
 						(int) westOption.getHeight());
 
 			if (Math.hypot(currentPos.x - checkpointsPos.getLast().x,
-					currentPos.y - checkpointsPos.getLast().y) > 100) {
+					currentPos.y - checkpointsPos.getLast().y) > rayonMenu-5) {
 				Graphics graph = this.getGraphics();
 				graph.setColor(Color.CYAN);
 				switch (newDirection) {
