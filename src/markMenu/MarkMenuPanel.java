@@ -140,6 +140,8 @@ public class MarkMenuPanel extends JPanel {
 					
 					detectCheckPoints(e);
 					
+					paintCheckPoints();
+					
 					displayMenu(lastCheckPoint);
 	
 					drawSegment(lastCheckPoint, currentPos);
